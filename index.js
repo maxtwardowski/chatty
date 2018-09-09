@@ -1,10 +1,18 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 var port = 3000;
 
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/chatty_db", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost:27017/chattydb", { useNewUrlParser: true });
+
+mongoose.set('useCreateIndex', true);
 
 var userSchema = new mongoose.Schema({
   username: {
@@ -30,6 +38,29 @@ var userSchema = new mongoose.Schema({
 });
 
 var User = mongoose.model("User", userSchema);
+
+app.post("/", (req, res) => {
+  if (req.body.email &&
+    req.body.username &&
+    req.body.password &&
+    req.body.passwordConf) {
+    var userData = {
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+      passwordConf: req.body.passwordConf,
+    }
+    User.create(userData, (err, user) => {
+      if (err) {
+        return next(err);
+      } else {
+        res.send({
+          'message': 'User saved!'
+        });
+      }
+    });
+  }
+});
 
 app.listen(port, () => {
   console.log("Server listening on port " + port);
