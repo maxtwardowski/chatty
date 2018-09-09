@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
+const User = require('./models/user');
 const app = express();
 
 app.use(bodyParser.json());
@@ -15,51 +15,20 @@ mongoose.connect("mongodb://localhost:27017/chattydb", { useNewUrlParser: true }
 
 mongoose.set('useCreateIndex', true);
 
-var userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  passwordConf: {
-    type: String,
-    required: true,
-  }
-});
-
-userSchema.pre('save', function (next) {
-  var user = this;
-  bcrypt.hash(user.password, 10, function (err, hash){
-    if (err) {
-      return next(err);
-    }
-    user.password = hash;
-    next();
-  })
-});
-
-var User = mongoose.model("User", userSchema);
-
 app.post("/", (req, res, next) => {
-  if (req.body.email &&
-    req.body.username &&
-    req.body.password &&
-    req.body.passwordConf) {
+
+  if (req.body.password !== req.body.passwordConf) {
+    var err = new Error('Passwords do not match.');
+    err.status = 400;
+    return next(err);
+  }
+
+  if (req.body.email && req.body.username && req.body.password && req.body.passwordConf) {
     var userData = {
       email: req.body.email,
       username: req.body.username,
-      password: req.body.password
+      password: req.body.password,
+      passwordConf: req.body.passwordConf
     }
     User.create(userData, (err, user) => {
       if (err) {
@@ -70,6 +39,10 @@ app.post("/", (req, res, next) => {
         });
       }
     });
+  } else {
+    var error = new Error('All fields need to be filled');
+    error.status = 400;
+    return next(error);
   }
 });
 
