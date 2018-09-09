@@ -1,12 +1,12 @@
 const express = require('express');
+const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
 const User = require('./models/user');
-const app = express();
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 var port = 3000;
 
@@ -15,14 +15,23 @@ mongoose.connect("mongodb://localhost:27017/chattydb", { useNewUrlParser: true }
 
 mongoose.set('useCreateIndex', true);
 
-app.post("/", (req, res, next) => {
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
+});
 
+io.on('connection', socket => {
+  console.log('a user connected');
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+});
+
+app.post("/users", (req, res, next) => {
   if (req.body.password !== req.body.passwordConf) {
     var err = new Error('Passwords do not match.');
     err.status = 400;
     return next(err);
   }
-
   if (req.body.email && req.body.username && req.body.password && req.body.passwordConf) {
     var userData = {
       email: req.body.email,
@@ -45,6 +54,6 @@ app.post("/", (req, res, next) => {
   }
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log("Server listening on port " + port);
 });
