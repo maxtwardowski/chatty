@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
 const app = express();
 
 app.use(bodyParser.json());
@@ -37,9 +38,20 @@ var userSchema = new mongoose.Schema({
   }
 });
 
+userSchema.pre('save', function (next) {
+  var user = this;
+  bcrypt.hash(user.password, 10, function (err, hash){
+    if (err) {
+      return next(err);
+    }
+    user.password = hash;
+    next();
+  })
+});
+
 var User = mongoose.model("User", userSchema);
 
-app.post("/", (req, res) => {
+app.post("/", (req, res, next) => {
   if (req.body.email &&
     req.body.username &&
     req.body.password &&
@@ -47,8 +59,7 @@ app.post("/", (req, res) => {
     var userData = {
       email: req.body.email,
       username: req.body.username,
-      password: req.body.password,
-      passwordConf: req.body.passwordConf,
+      password: req.body.password
     }
     User.create(userData, (err, user) => {
       if (err) {

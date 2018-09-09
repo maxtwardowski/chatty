@@ -12,7 +12,8 @@
     "express": "*",
     "socket.io": "*",
     "mongoose": "*",
-    "body-parser": "*"
+    "body-parser": "*",
+    "bcrypt": "*"
   },
   "devDependencies": {
     "nodemon": "*"
