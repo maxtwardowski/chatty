@@ -22,8 +22,10 @@ app.get('/', (req, res) => {
 io.on('connection', socket => {
   console.log('a user connected');
 
-  socket.on('chat message', msg => {
-    io.emit('chat message', msg);
+  socket.username = "Anonymous";
+
+  socket.on('chat message', data => {
+    io.emit('chat message', { message: data.message, username: socket.username });
   });
 
   socket.on('disconnect', () => {
