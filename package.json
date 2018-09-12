@@ -4,16 +4,22 @@
   "description": "Real-time chatting app",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:server": "nodemon --ignore sessions/ index.js"
   },
   "author": "Max Twardowski",
   "license": "ISC",
   "dependencies": {
-    "express": "*",
-    "socket.io": "*",
-    "mongoose": "*",
+    "bcrypt": "*",
     "body-parser": "*",
-    "bcrypt": "*"
+    "express": "*",
+    "express-session": "*",
+    "mongoose": "*",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "session-file-store": "*",
+    "socket.io": "*",
+    "uuid": "*"
   },
   "devDependencies": {
     "nodemon": "*"
