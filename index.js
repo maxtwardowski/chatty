@@ -34,14 +34,17 @@ passport.use(new LocalStrategy(
   { usernameField: 'email' },
   (email, password, done) => {
     User.findOne({ email }, (err, user) => {
+      // USER NOT PRESENT IN DB
       if (!user) {
         console.log('INV USR')
         return done(null, false, { message: 'Invalid credentials!' });
       }
+      // WRONG PASSWORD
       if (!bcrypt.compareSync(password, user.password)) {
         console.log('INV PSW')
         return done(null, false, { message: 'Invalid credentials!' });
       }
+      // POSITIVE SCENARIO
       console.log('ITS OK')
       return done(null, user);
     });
@@ -49,13 +52,16 @@ passport.use(new LocalStrategy(
 ));
 
 passport.serializeUser((user, done) => {
-  console.log("USER ID: " + user._id);
+  console.log('SERIALIZE USER: ' + user._id)
   done(null, user._id);
 });
 
 passport.deserializeUser((id, done) => {
+  console.log('DESERIALIZE USER: ' + id)
   User.findById(id, (err, user) => {
-    if (user._id === id) {
+    console.log('DESERIALIZED USER.ID: ' + user._id)
+    console.log(user._id == id)
+    if (user._id == id) {
       done(null, user);
     } else {
       done(err, false)
