@@ -19,7 +19,8 @@
     "passport-local": "^1.0.0",
     "session-file-store": "*",
     "socket.io": "*",
-    "uuid": "*"
+    "uuid": "*",
+    "cookie-parser": "*"
   },
   "devDependencies": {
     "nodemon": "*"
