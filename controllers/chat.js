@@ -1,6 +1,7 @@
 const Conversation = require("../models/coversation");
 const Message = require("../models/message");
 const User = require("../models/user");
+const mongoose = require("mongoose");
 
 exports.sendReply = (req, res, next) => {
   const replyData = {
@@ -33,9 +34,14 @@ exports.getConversation = (req, res, next) => {
 };
 
 exports.newConversation = (req, res, next) => {
-  const conversationData = req.conversationParticipants;
+  var convIDs = req.body.convParticipants;
+  convIDs.forEach(element => {
+    element = mongoose.Types.ObjectId(element);
+  });
 
-  Conversation.create(conversationData, (err, conversation) => {
+  const convData = { participants: convIDs };
+
+  Conversation.create(convData, (err, conversation) => {
     if (err) return next(err);
     res.status(200).json({ message: "Conversation has been created." });
     return next();

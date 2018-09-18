@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema(
   {
-    conversationId: {
+    conversationID: {
       type: mongoose.Schema.Types.ObjectId,
       required: true
     },

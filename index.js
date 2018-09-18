@@ -87,10 +87,6 @@ app.get("/", (req, res) => {
   res.send(`<h1>We home dude</h1>`);
 });
 
-app.get("/login", (req, res) => {
-  res.send(`You got the login page!\n`);
-});
-
 app.post("/login", AuthController.authenticateUser);
 
 app.post("/logout", authRequired, AuthController.logoutUser);
@@ -122,7 +118,7 @@ app.get("/users", AuthController.getUsers);
 
 // ACTUAL CHAT ROUTES
 // Sending replies
-app.post("/chat/:convID", authRequired, ChatController.sendReply);
+//app.post("/chat/:convID", authRequired, ChatController.sendReply);
 
 // Retrieving a list of all the conversations (without messages!)
 app.get("/chat", authRequired, ChatController.getAllConversations);
@@ -131,7 +127,7 @@ app.get("/chat", authRequired, ChatController.getAllConversations);
 app.get("/chat/:convID", authRequired, ChatController.getConversation);
 
 // New conversation
-app.post("/chat/new/:recipent", authRequired, ChatController.newConversation);
+app.post("/chat/new/", authRequired, ChatController.newConversation);
 
 // just for development purposes
 app.get("/authrequired", authRequired, (req, res) => {
