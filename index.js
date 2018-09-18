@@ -15,6 +15,12 @@ const cookieParser = require("cookie-parser");
 
 const port = 3000;
 
+var authRequired = (req, res, next) => {
+  if (req.isAuthenticated())
+      return next();
+  res.send("You're NOT authenticated!");
+}
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -101,7 +107,6 @@ app.post("/logout", (req, res, next) => {
     if (err) {
       return next(err);
     }
-    // The response should indicate that the user is no longer authenticated.
     return res.send({
       authenticated: req.isAuthenticated()
     });
@@ -162,12 +167,14 @@ app.post("/users", (req, res, next) => {
   }
 });
 
-app.get("/authrequired", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.send("You're authenticated!\n");
-  } else {
-    res.send("You're NOT authenticated");
-  }
+app.get("/users", (req, res) => {
+  User.find((err, users) => {
+    res.send(users);
+  });
+});
+
+app.get("/authrequired", authRequired, (req, res) => {
+  res.send("You're authenticated!\n");
 });
 
 server.listen(port, () => {
