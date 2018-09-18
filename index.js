@@ -12,14 +12,15 @@ const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
+const AuthController = require("./controllers/authentication");
+const ChatController = require("./controllers/chat");
 
 const port = 3000;
 
 var authRequired = (req, res, next) => {
-  if (req.isAuthenticated())
-      return next();
+  if (req.isAuthenticated()) return next();
   res.send("You're NOT authenticated!");
-}
+};
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -90,30 +91,11 @@ app.get("/login", (req, res) => {
   res.send(`You got the login page!\n`);
 });
 
-app.post("/login", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    req.login(user, err => {
-      if (err) {
-        return res.send("Authentication error - invalid credentials.\n");
-      }
-      return res.send("Successfully authenticated!\n");
-    });
-  })(req, res, next);
-});
+app.post("/login", AuthController.authenticateUser);
 
-app.post("/logout", (req, res, next) => {
-  req.logout();
-  req.session.destroy(err => {
-    if (err) {
-      return next(err);
-    }
-    return res.send({
-      authenticated: req.isAuthenticated()
-    });
-  });
-});
+app.post("/logout", authRequired, AuthController.logoutUser);
 
-app.get("/chat", (req, res) => {
+app.get("/chattemppppp", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
 
@@ -134,45 +116,24 @@ io.on("connection", socket => {
   });
 });
 
-app.post("/users", (req, res, next) => {
-  if (req.body.password !== req.body.passwordConf) {
-    var err = new Error("Passwords do not match.");
-    err.status = 400;
-    return next(err);
-  }
-  if (
-    req.body.email &&
-    req.body.username &&
-    req.body.password &&
-    req.body.passwordConf
-  ) {
-    var userData = {
-      email: req.body.email,
-      username: req.body.username,
-      password: req.body.password
-    };
-    User.create(userData, (err, user) => {
-      if (err) {
-        return next(err);
-      } else {
-        res.send({
-          message: "User saved!"
-        });
-      }
-    });
-  } else {
-    var error = new Error("All fields need to be filled");
-    error.status = 400;
-    return next(error);
-  }
-});
+app.post("/users", AuthController.newUser);
 
-app.get("/users", (req, res) => {
-  User.find((err, users) => {
-    res.send(users);
-  });
-});
+app.get("/users", AuthController.getUsers);
 
+// ACTUAL CHAT ROUTES
+// Sending replies
+app.post("/chat/:convID", authRequired, ChatController.sendReply);
+
+// Retrieving a list of all the conversations (without messages!)
+app.get("/chat", authRequired, ChatController.getAllConversations);
+
+// Retrieving a particular conversation (with messages!)
+app.get("/chat/:convID", authRequired, ChatController.getConversation);
+
+// New conversation
+app.post("/chat/new/:recipent", authRequired, ChatController.newConversation);
+
+// just for development purposes
 app.get("/authrequired", authRequired, (req, res) => {
   res.send("You're authenticated!\n");
 });
