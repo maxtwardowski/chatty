@@ -101,7 +101,7 @@ io.on("connection", socket => {
   socket.username = "Anonymous";
 
   socket.on("SEND_MESSAGE", data => {
-    io.emit("SEND_MESSAGE", {
+    io.emit("MESSAGE", {
       message: data.message,
       username: socket.username
     });
