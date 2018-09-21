@@ -38,6 +38,15 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -132,6 +141,11 @@ app.post("/chat/new/", authRequired, ChatController.newConversation);
 // just for development purposes
 app.get("/authrequired", authRequired, (req, res) => {
   res.send("You're authenticated!\n");
+});
+
+app.post("/showmedat", (req, res) => {
+  console.log(req.body);
+  res.send("hehehhe");
 });
 
 server.listen(port, () => {
