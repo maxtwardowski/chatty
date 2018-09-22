@@ -1,10 +1,10 @@
 <template>
   <div>
     <form @submit="submitSignup">
-      <p><input v-model="email" /></p>
-      <p><input v-model="username" /></p>
-      <p><input v-model="password" /></p>
-      <p><input v-model="passwordConf" /></p>
+      <p><input v-model="email" type="text" placeholder="Email" /></p>
+      <p><input v-model="username" type="text" placeholder="Username" /></p>
+      <p><input v-model="password" type="password" placeholder="Password" /></p>
+      <p><input v-model="passwordConf" type="password" placeholder="Confirm Password" /></p>
       <button>Sign Up</button>
     </form>
   </div>
@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     submitSignup () {
-      axios.post('http://localhost:3000/user', {
+      axios.post('http://localhost:3000/users', {
         email: this.email,
         username: this.username,
         password: this.password,
