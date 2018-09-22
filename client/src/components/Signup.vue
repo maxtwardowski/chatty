@@ -1,5 +1,7 @@
 <template>
   <div>
+    <h2>Signup</h2>
+    <p v-show="passwordsMatchError">Passwords don't match!</p>
     <form @submit="submitSignup">
       <p><input v-model="email" type="text" placeholder="Email" /></p>
       <p><input v-model="username" type="text" placeholder="Username" /></p>
@@ -21,20 +23,25 @@ export default {
       username: '',
       password: '',
       passwordConf: '',
-      error: false
+      passwordsMatchError: false
     }
   },
   methods: {
     submitSignup () {
-      axios.post('http://localhost:3000/users', {
-        email: this.email,
-        username: this.username,
-        password: this.password,
-        passwordConf: this.passwordConf
-      }).then(res => {
-        console.log(res)
-        this.error = true
-      })
+      if (this.password !== this.passwordConf) {
+        this.passwordsMatchError = true
+      } else {
+        axios.post('http://localhost:3000/users', {
+          email: this.email,
+          username: this.username,
+          password: this.password,
+          passwordConf: this.passwordConf
+        }).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
+      }
     }
   }
 }

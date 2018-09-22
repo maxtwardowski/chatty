@@ -1,5 +1,7 @@
 <template>
   <div>
+    <h2>Login</h2>
+    <p v-show="error" style="color: red">Wrong email and/or password!</p>
     <form @submit="submitLogin">
       <p><input v-model="email" type="text" placeholder="Email" /></p>
       <p><input v-model="password" type="password" placeholder="Password" /></p>
@@ -22,7 +24,7 @@ export default {
   },
   methods: {
     submitLogin () {
-      axios.post('http://localhost:3000/showmedat', {
+      axios.post('http://localhost:3000/login', {
         email: this.email,
         password: this.password
       }).then(res => {
@@ -31,6 +33,8 @@ export default {
         this.error = true
         console.log(err)
       })
+      this.email = ''
+      this.password = ''
     }
   }
 }

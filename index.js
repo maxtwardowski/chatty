@@ -100,10 +100,6 @@ app.post("/login", AuthController.authenticateUser);
 
 app.post("/logout", authRequired, AuthController.logoutUser);
 
-app.get("/chattemppppp", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
-});
-
 io.on("connection", socket => {
   console.log("a user connected");
 
