@@ -13,6 +13,8 @@
 <script>
 import io from 'socket.io-client'
 
+var chatid = window.chatid
+
 export default {
   name: 'Chat',
   data () {
@@ -20,13 +22,14 @@ export default {
       user: 'anonnn',
       message: '',
       messages: [],
-      socket: io('localhost:3000')
+      socket: io('localhost:3000'),
+      chatid: chatid
     }
   },
   methods: {
     sendMessage (e) {
-      e.preventDefault()
-      this.socket.emit('SEND_MESSAGE', {
+      var nsp = io.of('/kurwaco')
+      nsp.emit('SEND_MESSAGE', {
         user: this.user,
         message: this.message
       })
