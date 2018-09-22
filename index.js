@@ -39,7 +39,8 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+  res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
@@ -137,6 +138,14 @@ app.post("/chat/new/", authRequired, ChatController.newConversation);
 // just for development purposes
 app.get("/authrequired", authRequired, (req, res) => {
   res.send("You're authenticated!\n");
+});
+
+app.get("/protected", authRequired, (req, res) => {
+  res.send("PROTECTED");
+});
+
+app.get("/unprotected", (req, res) => {
+  res.send("UNPROTECTED");
 });
 
 app.post("/showmedat", (req, res) => {

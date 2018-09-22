@@ -24,10 +24,15 @@ export default {
   },
   methods: {
     submitLogin () {
-      axios.post('http://localhost:3000/login', {
-        email: this.email,
-        password: this.password
-      }).then(res => {
+      axios.post('http://localhost:3000/login',
+        {
+          'email': this.email,
+          'password': this.password
+        },
+        {
+          withCredentials: true
+        }
+      ).then(res => {
         console.log(res)
       }).catch(err => {
         this.error = true
