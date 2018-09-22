@@ -16,7 +16,8 @@ export default {
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
+      error: false
     }
   },
   methods: {
@@ -24,6 +25,11 @@ export default {
       axios.post('http://localhost:3000/showmedat', {
         email: this.email,
         password: this.password
+      }).then(res => {
+        console.log(res)
+      }).catch(err => {
+        this.error = true
+        console.log(err)
       })
     }
   }
