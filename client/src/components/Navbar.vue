@@ -1,15 +1,22 @@
 <template>
-  <div>
+  <div v-if="user">
     <router-link to="/">Chat</router-link>
+    <router-link to="/logout">Logout</router-link>
+  </div>
+  <div v-else>
     <router-link to="/login">Login</router-link>
     <router-link to="/signup">Sign Up</router-link>
-    <router-link to="/check">Checker</router-link>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+  computed: mapState({
+    user: state => state.user
+  })
 }
 </script>
 

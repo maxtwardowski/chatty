@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="messages" v-for="(msg, index) in messages" :key="index">
-      <p><span class="font-weight-bold">{{ msg.user }}: </span>{{ msg.message }}</p>
+    <div v-for="(msg, index) in messages" :key="index">
+      <p><b>{{ msg.username }}</b>: {{ msg.message }}</p>
     </div>
     <form @submit="sendMessage">
-      <input id="m" type="text" v-model="message" autocomplete="off" />
+      <input type="text" v-model="message" autocomplete="off" />
       <button>Send</button>
     </form>
   </div>
@@ -12,6 +12,7 @@
 
 <script>
 import io from 'socket.io-client'
+import { mapState } from 'vuex'
 
 var chatid = window.chatid
 
@@ -19,7 +20,6 @@ export default {
   name: 'Chat',
   data () {
     return {
-      user: 'anonnn',
       message: '',
       messages: [],
       socket: io('localhost:3000'),
@@ -28,21 +28,21 @@ export default {
   },
   methods: {
     sendMessage (e) {
-      var nsp = io.of('/kurwaco')
-      nsp.emit('SEND_MESSAGE', {
-        user: this.user,
+      this.socket.emit('SEND_MESSAGE', {
+        username: this.username,
         message: this.message
       })
       this.message = ''
-      console.log(this.messages)
     }
   },
   mounted () {
     this.socket.on('MESSAGE', (data) => {
       this.messages = [...this.messages, data]
-      // you can also do this.messages.push(data)
     })
-  }
+  },
+  computed: mapState({
+    username: state => state.user.username
+  })
 }
 </script>
 

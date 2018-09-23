@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <h1>Chatty</h1>
     <Navbar />
     <router-view/>
   </div>
@@ -7,14 +8,18 @@
 
 <script>
 import Navbar from './components/Navbar'
+import { mapState } from 'vuex'
 
 export default {
   name: 'App',
   components: {
     Navbar
   },
+  computed: mapState({
+    user: state => state.user
+  }),
   created () {
-    this.$store.dispatch('fetchUser')
+    if (this.user) this.$store.dispatch('fetchUser')
   }
 }
 </script>

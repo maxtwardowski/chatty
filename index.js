@@ -104,12 +104,12 @@ app.post("/logout", authRequired, AuthController.logoutUser);
 io.on("connection", socket => {
   console.log("a user connected");
 
-  socket.username = "Anonymous";
+  //socket.username = "Anonymous";
 
   socket.on("SEND_MESSAGE", data => {
     io.emit("MESSAGE", {
       message: data.message,
-      username: socket.username
+      username: data.username
     });
   });
 

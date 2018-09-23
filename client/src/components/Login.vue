@@ -33,7 +33,8 @@ export default {
           withCredentials: true
         }
       ).then(res => {
-        console.log(res)
+        this.$store.dispatch('fetchUser')
+        this.$router.push('/')
       }).catch(err => {
         this.error = err
       })
