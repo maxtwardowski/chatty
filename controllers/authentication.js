@@ -1,10 +1,13 @@
 const User = require("../models/user");
 const passport = require("passport");
 
-exports.getUsers = (req, res) => {
-  User.find((err, users) => {
-    res.status(200).json({ users });
-  });
+exports.getUser = (req, res) => {
+  const userData = {
+    id: req.user._id,
+    email: req.user.email,
+    username: req.user.username
+  }
+  res.status(200).json(userData)
 };
 
 exports.newUser = (req, res, next) => {
@@ -54,7 +57,7 @@ exports.logoutUser = (req, res, next) => {
     if (err) {
       return next(err);
     }
-    return res.send({
+    return res.status(200).json({
       authenticated: req.isAuthenticated()
     });
   });

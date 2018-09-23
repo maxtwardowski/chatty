@@ -19,7 +19,7 @@ const port = 3000;
 
 var authRequired = (req, res, next) => {
   if (req.isAuthenticated()) return next();
-  res.send("You're NOT authenticated!");
+  res.status(403).json("You're NOT authenticated!");
 };
 
 app.use(bodyParser.json());
@@ -37,6 +37,16 @@ app.use(
     saveUninitialized: true
   })
 );
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -91,17 +101,13 @@ app.post("/login", AuthController.authenticateUser);
 
 app.post("/logout", authRequired, AuthController.logoutUser);
 
-app.get("/chattemppppp", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
-});
-
 io.on("connection", socket => {
   console.log("a user connected");
 
   socket.username = "Anonymous";
 
-  socket.on("chat message", data => {
-    io.emit("chat message", {
+  socket.on("SEND_MESSAGE", data => {
+    io.emit("MESSAGE", {
       message: data.message,
       username: socket.username
     });
@@ -114,7 +120,7 @@ io.on("connection", socket => {
 
 app.post("/users", AuthController.newUser);
 
-app.get("/users", AuthController.getUsers);
+app.get("/users", AuthController.getUser);
 
 // ACTUAL CHAT ROUTES
 // Sending replies
@@ -130,8 +136,18 @@ app.get("/chat/:convID", authRequired, ChatController.getConversation);
 app.post("/chat/new/", authRequired, ChatController.newConversation);
 
 // just for development purposes
-app.get("/authrequired", authRequired, (req, res) => {
-  res.send("You're authenticated!\n");
+app.get("/protected", authRequired, (req, res) => {
+  console.log(req.user)
+  res.send("PROTECTED");
+});
+
+app.get("/unprotected", (req, res) => {
+  res.send("UNPROTECTED");
+});
+
+app.post("/showmedat", (req, res) => {
+  console.log(req.body);
+  res.send("hehehhe");
 });
 
 server.listen(port, () => {
