@@ -19,7 +19,7 @@ const port = 3000;
 
 var authRequired = (req, res, next) => {
   if (req.isAuthenticated()) return next();
-  res.send("You're NOT authenticated!");
+  res.status(403).json("You're NOT authenticated!");
 };
 
 app.use(bodyParser.json());
@@ -120,7 +120,7 @@ io.on("connection", socket => {
 
 app.post("/users", AuthController.newUser);
 
-app.get("/users", AuthController.getUsers);
+app.get("/users", AuthController.getUser);
 
 // ACTUAL CHAT ROUTES
 // Sending replies
@@ -136,11 +136,8 @@ app.get("/chat/:convID", authRequired, ChatController.getConversation);
 app.post("/chat/new/", authRequired, ChatController.newConversation);
 
 // just for development purposes
-app.get("/authrequired", authRequired, (req, res) => {
-  res.send("You're authenticated!\n");
-});
-
 app.get("/protected", authRequired, (req, res) => {
+  console.log(req.user)
   res.send("PROTECTED");
 });
 

@@ -35,8 +35,7 @@ export default {
       ).then(res => {
         console.log(res)
       }).catch(err => {
-        this.error = true
-        console.log(err)
+        this.error = err
       })
       this.email = ''
       this.password = ''
