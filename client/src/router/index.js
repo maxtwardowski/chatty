@@ -4,6 +4,7 @@ import Chat from '../components/Chat.vue'
 import Login from '../components/Login.vue'
 import Signup from '../components/Signup.vue'
 import Test from '../components/Test.vue'
+import ConversationsList from '../components/ConversationsList.vue'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/test',
       name: 'Test',
       component: Test
+    },
+    {
+      path: '/conversations',
+      name: 'Conversations',
+      component: ConversationsList
     }
   ]
 })

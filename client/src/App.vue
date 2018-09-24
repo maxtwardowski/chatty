@@ -19,7 +19,7 @@ export default {
     user: state => state.user
   }),
   created () {
-    if (this.user) this.$store.dispatch('fetchUser')
+    if (!this.user) this.$store.dispatch('fetchUser')
   }
 }
 </script>

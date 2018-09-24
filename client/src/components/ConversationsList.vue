@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="(conversation, index) in conversations" :key="index">
-
+      {{ thumbnail(conversation.participants) }}
     </div>
   </div>
 </template>
@@ -21,9 +21,19 @@ export default {
       withCredentials: true
     }).then(res => {
       this.conversations = res.data.conversations
-    }).err(err => {
+    }).catch(err => {
       console.log(err)
     })
+  },
+  methods: {
+    thumbnail (participants) {
+      var str = ''
+      participants.forEach(element => {
+        str += ' '
+        str += element.username
+      })
+      return str
+    }
   }
 }
 </script>
