@@ -11,7 +11,7 @@ const actions = {
       withCredentials: true
     }).then(res => {
       commit(LOAD_USER, res.data)
-    })
+    }).catch(err => console.log(err))
   }
 }
 

@@ -1,7 +1,14 @@
 <template>
   <div>
     <div v-for="(conversation, index) in conversations" :key="index">
-      {{ thumbnail(conversation.participants) }}
+      <router-link :to="{
+        name: 'Chat',
+        params: {
+          convId: conversation._id
+        }
+      }">
+        {{ thumbnail(conversation.participants) }}
+      </router-link>
     </div>
   </div>
 </template>
@@ -33,6 +40,9 @@ export default {
         str += element.username
       })
       return str
+    },
+    goToConversation () {
+      this.$router.push('/chat')
     }
   }
 }
