@@ -18,10 +18,13 @@ exports.sendReply = (req, res, next) => {
 };
 
 exports.getAllConversations = (req, res, next) => {
-  Conversation.find({ participants: req.user._id }, (err, conversations) => {
-    if (err) return next(err);
-    res.status(200).json({ conversations });
-    return next();
+  Conversation
+    .find({ participants: req.user._id })
+    .populate('participants')
+    .exec((err, conversations) => {
+      if (err) return next(err);
+      res.status(200).json({ conversations });
+      return next();
   });
 };
 
