@@ -125,6 +125,7 @@ app.get("/users/all", authRequired, (req, res, next) => {
     .exec((err, users) => {
       if (err) return next(err);
       res.status(200).json({ users });
+      return next();
     })
 });
 
@@ -138,7 +139,7 @@ app.get("/chat", authRequired, ChatController.getAllConversations);
 app.get("/chat/:convId", authRequired, ChatController.getConversation);
 
 // New conversation
-app.post("/chat/new/", authRequired, ChatController.newConversation);
+app.post("/chat/conv/new/", authRequired, ChatController.newConversation);
 
 // just for development purposes
 app.get("/protected", authRequired, (req, res) => {

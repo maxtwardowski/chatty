@@ -2,18 +2,21 @@
   <div>
     <conversation-creator></conversation-creator>
     <div>
-      <input type="text" v-model="search" placeholder="Search conversations..." />
+      <input type="text" v-model="search" placeholder="Search existing conversations..." />
     </div>
-    <div v-for="(conversation, index) in filteredList" :key="index">
-      <router-link :to="{
-        name: 'Chat',
-        params: {
-          convId: conversation._id
-        }
-      }">
-        {{ thumbnail(conversation.participants) }}
-      </router-link>
-    </div>
+    <p><b>My conversations:</b></p>
+    <ul>
+      <li v-for="(conversation, index) in filteredList" :key="index">
+        <router-link :to="{
+          name: 'Chat',
+          params: {
+            convId: conversation._id
+          }
+        }">
+          {{ thumbnail(conversation.participants) }}
+        </router-link>
+      </li>
+    </ul>
   </div>
 </template>
 

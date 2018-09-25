@@ -52,7 +52,7 @@ exports.getConversation = (req, res, next) => {
 exports.newConversation = (req, res, next) => {
   var convIDs = req.body.convParticipants;
   convIDs.forEach(element => {
-    element = mongoose.Types.ObjectId(element);
+    element = mongoose.Types.ObjectId(element._id);
   });
 
   const convData = { participants: convIDs };

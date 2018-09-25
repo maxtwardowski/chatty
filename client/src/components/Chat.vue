@@ -21,6 +21,7 @@ export default {
     return {
       message: '',
       messages: [],
+      participants: [],
       socket: io('localhost:3000'),
       conversationId: this.$route.params.convId
     }
@@ -54,6 +55,7 @@ export default {
     axios.get(`http://localhost:3000/chat/${this.conversationId}`, {
       withCredentials: true
     }).then(res => {
+      console.log(res)
       var oldMessages = res.data.msgList
       oldMessages.forEach(msg => {
         this.messages.push(msg)
