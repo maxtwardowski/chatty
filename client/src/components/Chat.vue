@@ -13,8 +13,7 @@
 <script>
 import io from 'socket.io-client'
 import { mapState } from 'vuex'
-
-var chatid = window.chatid
+import axios from 'axios'
 
 export default {
   name: 'Chat',
@@ -23,12 +22,14 @@ export default {
       message: '',
       messages: [],
       socket: io('localhost:3000'),
-      chatid: chatid
+      conversationId: this.$route.params.convId
     }
   },
   methods: {
     sendMessage (e) {
+      e.preventDefault()
       this.socket.emit('SEND_MESSAGE', {
+        conversationId: this.conversationId,
         username: this.username,
         message: this.message
       })
@@ -39,6 +40,14 @@ export default {
     this.socket.on('MESSAGE', (data) => {
       this.messages = [...this.messages, data]
     })
+  },
+  created () {
+    axios.get(`http://localhost:3000/chat/${this.conversationId}`, {
+      withCredentials: true
+    }).then(res => {
+
+    })
+    this.socket.emit('SUBSCRIBE', this.conversationId)
   },
   computed: mapState({
     username: state => state.user.username

@@ -29,11 +29,13 @@ exports.getAllConversations = (req, res, next) => {
 };
 
 exports.getConversation = (req, res, next) => {
-  Conversation.findById(req.conversationID, (err, conversation) => {
-    if (err) return next(err);
-    res.status(200).json({ conversation });
-    return next();
-  });
+  Message
+    .find({ conversationID: req.params.convId })
+    .exec((err, conversation) => {
+      if (err) return next(err);
+      res.status(200).json({ conversation });
+      return next()
+    })
 };
 
 exports.newConversation = (req, res, next) => {

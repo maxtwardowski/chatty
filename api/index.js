@@ -93,21 +93,18 @@ mongoose.connect(
 
 mongoose.set("useCreateIndex", true);
 
-app.get("/", (req, res) => {
-  res.send(`<h1>We home dude</h1>`);
-});
-
 app.post("/login", AuthController.authenticateUser);
 
 app.post("/logout", authRequired, AuthController.logoutUser);
 
 io.on("connection", socket => {
-  console.log("a user connected");
 
-  //socket.username = "Anonymous";
+  socket.on('SUBSCRIBE', room => {
+    socket.join(room);
+  });
 
   socket.on("SEND_MESSAGE", data => {
-    io.emit("MESSAGE", {
+    io.sockets.in(data.conversationId).emit('MESSAGE', {
       message: data.message,
       username: data.username
     });
