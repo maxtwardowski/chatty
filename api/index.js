@@ -119,6 +119,15 @@ app.post("/users", AuthController.newUser);
 
 app.get("/users", AuthController.getUser);
 
+app.get("/users/all", authRequired, (req, res, next) => {
+  User
+    .find({'username':{$ne: req.user.username}})
+    .exec((err, users) => {
+      if (err) return next(err);
+      res.status(200).json({ users });
+    })
+});
+
 // ACTUAL CHAT ROUTES
 // Sending replies
 app.post("/chat/:convId", authRequired, ChatController.sendReply);

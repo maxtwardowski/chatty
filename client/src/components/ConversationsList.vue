@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div v-for="(conversation, index) in conversations" :key="index">
+    <conversation-creator></conversation-creator>
+    <div>
+      <input type="text" v-model="search" placeholder="Search conversations..." />
+    </div>
+    <div v-for="(conversation, index) in filteredList" :key="index">
       <router-link :to="{
         name: 'Chat',
         params: {
@@ -15,12 +19,14 @@
 
 <script>
 import axios from 'axios'
+import ConversationCreator from './ConversationCreator'
 
 export default {
   name: 'ConversationsList',
   data () {
     return {
-      conversations: []
+      conversations: [],
+      search: ''
     }
   },
   created () {
@@ -44,6 +50,16 @@ export default {
     goToConversation () {
       this.$router.push('/chat')
     }
+  },
+  computed: {
+    filteredList () {
+      return this.conversations.filter(conv => {
+        return this.thumbnail(conv.participants).toLowerCase().includes(this.search.toLowerCase())
+      })
+    }
+  },
+  components: {
+    ConversationCreator
   }
 }
 </script>

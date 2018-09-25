@@ -1,6 +1,6 @@
 <template>
   <div v-if="user">
-    <p>Logged in as {{ user.username }}</p>
+    <p><i>Logged in as {{ user.username }}</i></p>
     <router-link to="/conversations">Conversations</router-link>
     <router-link to="/logout">Logout</router-link>
   </div>
