@@ -28,12 +28,21 @@ export default {
   methods: {
     sendMessage (e) {
       e.preventDefault()
-      this.socket.emit('SEND_MESSAGE', {
-        conversationId: this.conversationId,
-        username: this.username,
-        message: this.message
+      axios.post(`http://localhost:3000/chat/${this.conversationId}`,
+        {
+          'messageContent': this.message
+        },
+        {
+          withCredentials: true
+        }
+      ).then(() => {
+        this.socket.emit('SEND_MESSAGE', {
+          conversationId: this.conversationId,
+          username: this.username,
+          message: this.message
+        })
+        this.message = ''
       })
-      this.message = ''
     }
   },
   mounted () {
@@ -45,7 +54,10 @@ export default {
     axios.get(`http://localhost:3000/chat/${this.conversationId}`, {
       withCredentials: true
     }).then(res => {
-
+      var oldMessages = res.data.msgList
+      oldMessages.forEach(msg => {
+        this.messages.push(msg)
+      })
     })
     this.socket.emit('SUBSCRIBE', this.conversationId)
   },

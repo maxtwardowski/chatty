@@ -121,13 +121,13 @@ app.get("/users", AuthController.getUser);
 
 // ACTUAL CHAT ROUTES
 // Sending replies
-//app.post("/chat/:convID", authRequired, ChatController.sendReply);
+app.post("/chat/:convId", authRequired, ChatController.sendReply);
 
 // Retrieving a list of all the conversations (without messages!)
 app.get("/chat", authRequired, ChatController.getAllConversations);
 
 // Retrieving a particular conversation (with messages!)
-app.get("/chat/:convID", authRequired, ChatController.getConversation);
+app.get("/chat/:convId", authRequired, ChatController.getConversation);
 
 // New conversation
 app.post("/chat/new/", authRequired, ChatController.newConversation);

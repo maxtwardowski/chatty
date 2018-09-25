@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 
 exports.sendReply = (req, res, next) => {
   const replyData = {
-    conversationID: req.params.conversationID,
+    conversationID: req.params.convId,
     body: req.body.messageContent,
     author: req.user._id
   };
@@ -31,9 +31,20 @@ exports.getAllConversations = (req, res, next) => {
 exports.getConversation = (req, res, next) => {
   Message
     .find({ conversationID: req.params.convId })
-    .exec((err, conversation) => {
+    .populate('author')
+    .exec((err, messages) => {
       if (err) return next(err);
-      res.status(200).json({ conversation });
+      var msgList = [];
+      messages.forEach(msg => {
+        msgList.push(
+          {
+            message: msg.body,
+            username: msg.author.username,
+            createdAt: msg.createdAt
+          }
+        )
+      });
+      res.status(200).json({ msgList });
       return next()
     })
 };
