@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button @click="getUsers">Kurwaa</button>
   </div>
 </template>
 
@@ -11,17 +10,30 @@ export default {
   name: 'ConversationCreator',
   data () {
     return {
-      users: []
+      users: [],
+      newConvParticipants: []
     }
   },
   methods: {
     submitNewConversation () {
-
+      axios.post('http://localhost:3000/chat/new',
+        {
+          convParticipants: this.newConvParticipants
+        },
+        {
+          withCredentials: true
+        }
+      ).then(res => {
+        this.$router.push(`/chat/${res.data.convId}`)
+      }).catch(err => console.log(err))
     },
     getUsers () {
       axios.get('http://localhost:3000/users/all', {
         withCredentials: true
-      }).then(res => console.log(res))
+      }).then(res => {
+        this.users = res.data.users
+      })
+        .catch(err => console.log(err))
     }
   }
 }

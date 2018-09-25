@@ -59,7 +59,12 @@ exports.newConversation = (req, res, next) => {
 
   Conversation.create(convData, (err, conversation) => {
     if (err) return next(err);
-    res.status(200).json({ message: "Conversation has been created." });
+    res.status(200).json(
+      {
+        message: "Conversation has been created.",
+        convId: conversation._id
+      }
+    );
     return next();
   });
 };

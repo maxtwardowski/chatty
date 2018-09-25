@@ -128,7 +128,6 @@ app.get("/users/all", authRequired, (req, res, next) => {
     })
 });
 
-// ACTUAL CHAT ROUTES
 // Sending replies
 app.post("/chat/:convId", authRequired, ChatController.sendReply);
 
